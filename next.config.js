@@ -1,3 +1,9 @@
-
 /** @type {import('next').NextConfig} */
-module.exports = { reactStrictMode: true };
+const nextConfig = {
+  webpack: (config) => {
+    config.resolve.alias["@"] = __dirname;
+    return config;
+  }
+};
+
+module.exports = nextConfig;
