@@ -1,7 +1,18 @@
 
 import { NextResponse } from "next/server";
+
+export const runtime = "nodejs";
+
 export async function POST(req: Request) {
   const { email, amount, plan } = await req.json();
+
+  if (!process.env.FLW_SECRET_KEY) {
+    return NextResponse.json(
+      { error: "Flutterwave secret key not configured" },
+      { status: 500 }
+    );
+  }
+
   const res = await fetch("https://api.flutterwave.com/v3/payments", {
     method: "POST",
     headers: {
@@ -18,5 +29,7 @@ export async function POST(req: Request) {
       payment_options: "mobilemoney,banktransfer"
     })
   });
-  return NextResponse.json(await res.json());
+
+  const data = await res.json();
+  return NextResponse.json(data);
 }
